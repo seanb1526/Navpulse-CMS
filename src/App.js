@@ -16,10 +16,8 @@ function App() {
           path="/dashboard"
           element={<PrivateRoute element={<Dashboard />} />} // Protect the Dashboard route
         />
-        <Route
-          path="/account-details"
-          element={<PrivateRoute element={<AccountDetails />} />} // Protect AccountDetails route
-        />
+<Route path="/account-details" element={<AccountDetails />} />
+
         <Route
           path="/upload-promos"
           element={<PrivateRoute element={<UploadPromos />} />} // Protect UploadPromos route

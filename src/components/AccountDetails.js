@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { masterAuth } from "../firebase/firebaseConfig";
-import { useEffect } from "react";
 import styles from "../assets/styles/AccountDetails.module.css"; // Add styles if needed
 
 const AccountDetails = () => {
@@ -18,15 +17,6 @@ const AccountDetails = () => {
       console.error("Error logging out:", error);
     }
   };
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user')); // Get user from localStorage
-
-    if (!user) {
-      // If no user found in localStorage, redirect to login page
-      navigate("/login");
-    }
-  }, [navigate]);
 
   return (
     <div className={styles.container}>
