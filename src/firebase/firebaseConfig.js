@@ -1,34 +1,79 @@
+// src/firebase/firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"
-import { getStorage } from "firebase/storage"
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { useState, useEffect } from "react";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// Load environment variables (only needed for Node.js)
-if (process.env.NODE_ENV !== "production") {
-    require("dotenv").config();
-}
-
-const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID,
-    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+// Master Firebase configuration (Main database containing user data)
+const masterFirebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const analytics = getAnalytics(app);
+// Salisbury Firebase configuration
+const salisburyFirebaseConfig = {
+  apiKey: "AIzaSyCLjUObxVrUsPcah9QAJVKAz0Jn2_Rox5E",
+  authDomain: "downtown-salisbury-app.firebaseapp.com",
+  projectId: "downtown-salisbury-app",
+  storageBucket: "downtown-salisbury-app.appspot.com",
+  messagingSenderId: "752025450110",
+  appId: "1:752025450110:web:0a5687ca3534d7b4a1ca2f",
+  measurementId: "G-QGDTX3B3C2"
+};
 
-export { auth, db, storage };
+// Initialize the Master Firebase app (Main user authentication)
+const masterApp = initializeApp(masterFirebaseConfig);
+const masterAuth = getAuth(masterApp);
+const masterDb = getFirestore(masterApp);
+
+// Function to get user's location from Master Firestore and initialize the correct project
+const initializeSubProject = async (uid) => {
+  try {
+    const userDocRef = doc(masterDb, "users", uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      console.log("User Data:", userData);
+
+      if (userData.location === "Salisbury") {
+        console.log("Initializing Salisbury Firebase Project...");
+        const subApp = initializeApp(salisburyFirebaseConfig, "salisburyApp");
+        return {
+          auth: getAuth(subApp),
+          db: getFirestore(subApp),
+          storage: getStorage(subApp),
+          analytics: getAnalytics(subApp)
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error initializing sub-project:", error);
+  }
+
+  return null; // If no matching location, return null
+};
+
+// Hook to check user authentication state
+const useAuth = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(masterAuth, async (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return unsubscribe; // Cleanup listener on unmount
+  }, []);
+
+  return user;
+};
+
+export { masterAuth, masterDb, useAuth, initializeSubProject , masterFirebaseConfig, salisburyFirebaseConfig };
