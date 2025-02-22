@@ -19,13 +19,13 @@ const masterFirebaseConfig = {
 
 // Salisbury Firebase configuration
 const salisburyFirebaseConfig = {
-  apiKey: "AIzaSyCLjUObxVrUsPcah9QAJVKAz0Jn2_Rox5E",
-  authDomain: "downtown-salisbury-app.firebaseapp.com",
-  projectId: "downtown-salisbury-app",
-  storageBucket: "downtown-salisbury-app.appspot.com",
-  messagingSenderId: "752025450110",
-  appId: "1:752025450110:web:0a5687ca3534d7b4a1ca2f",
-  measurementId: "G-QGDTX3B3C2"
+  apiKey: process.env.REACT_APP_SALISBURY_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_SALISBURY_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_SALISBURY_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_SALISBURY_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_SALISBURY_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_SALISBURY_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_SALISBURY_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize the Master Firebase app (Main user authentication)
