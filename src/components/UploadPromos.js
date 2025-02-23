@@ -17,63 +17,76 @@ const UploadPromos = () => {
   const [firebaseStorage, setFirebaseStorage] = useState(null);
   const [file, setFile] = useState(null);
   const [uploadUrl, setUploadUrl] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const initializeCorrectFirebaseProject = async () => {
       const user = masterAuth.currentUser;
       if (!user) {
-        console.error("No user signed in.");
+        console.log("No user signed in.");
         return;
       }
 
-      // Fetch user document from Firestore
-      const userRef = doc(masterDb, "users", user.uid);
-      const userSnap = await getDoc(userRef);
+      try {
+        const userRef = doc(masterDb, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        console.log("User Data:", userData);
-
-        // Determine Firebase project based on user location
-        if (userData.location === "Salisbury") {
-          console.log("Initializing Salisbury Firebase Project...");
-          const salisburyApp = initializeApp(salisburyFirebaseConfig, "salisbury");
-          setFirebaseStorage(getStorage(salisburyApp)); // Set correct storage
-        } else {
-          console.log("Using Master Firebase Project.");
-          setFirebaseStorage(getStorage(masterApp));
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          
+          if (userData.location === "Salisbury") {
+            // Initialize with a unique name to prevent conflicts
+            const salisburyApp = initializeApp(salisburyFirebaseConfig, `salisbury-${user.uid}`);
+            const storage = getStorage(salisburyApp);
+            setFirebaseStorage(storage);
+          } else {
+            const storage = getStorage(masterApp);
+            setFirebaseStorage(storage);
+          }
+          setIsInitialized(true);
         }
-      } else {
-        console.error("User not found in Firestore.");
+      } catch (error) {
+        console.error("Error initializing Firebase:", error);
       }
     };
 
     initializeCorrectFirebaseProject();
   }, []);
 
-  // Handle file selection
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  // Upload file to Firebase Storage
   const handleUpload = async () => {
-    if (!file || !firebaseStorage) {
-      console.error("No file selected or storage not initialized.");
+    if (!file || !firebaseStorage || !isInitialized) {
+      console.error("Upload prerequisites not met:", {
+        hasFile: !!file,
+        hasStorage: !!firebaseStorage,
+        isInitialized
+      });
       return;
     }
 
-    const storageRef = ref(firebaseStorage, `promos/${file.name}`);
-
     try {
-      await uploadBytes(storageRef, file);
+      const storageRef = ref(firebaseStorage, `Promos/${file.name}`);
+      console.log("Uploading to:", storageRef.fullPath);
+      
+      const snapshot = await uploadBytes(storageRef, file);
+      console.log("Upload snapshot:", snapshot);
+      
       const downloadURL = await getDownloadURL(storageRef);
+      console.log("Download URL:", downloadURL);
+      
       setUploadUrl(downloadURL);
-      console.log("File uploaded successfully:", downloadURL);
     } catch (error) {
       console.error("Upload failed:", error);
-    }
+      // Log specific error details
+      if (error.code === 'storage/unauthorized') {
+        console.error("Storage unauthorized. Check storage rules.");
+      }
+    } 
   };
+
+    // Handle file selection
+    const handleFileChange = (e) => {
+      setFile(e.target.files[0]);
+    };
 
   // Handle user logout
   const handleLogout = async () => {
