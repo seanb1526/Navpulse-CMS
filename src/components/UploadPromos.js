@@ -5,6 +5,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 import { masterFirebaseConfig, salisburyFirebaseConfig } from "../firebase/firebaseConfig";
+import imageCompression from "browser-image-compression";
 import styles from "../assets/styles/UploadPromos.module.css";
 
 // Initialize Master Firebase Project
@@ -33,7 +34,7 @@ const UploadPromos = () => {
 
         if (userSnap.exists()) {
           const userData = userSnap.data();
-          
+
           if (userData.location === "Salisbury") {
             // Initialize with a unique name to prevent conflicts
             const salisburyApp = initializeApp(salisburyFirebaseConfig, `salisbury-${user.uid}`);
@@ -53,6 +54,8 @@ const UploadPromos = () => {
     initializeCorrectFirebaseProject();
   }, []);
 
+
+
   const handleUpload = async () => {
     if (!file || !firebaseStorage || !isInitialized) {
       console.error("Upload prerequisites not met:", {
@@ -62,9 +65,11 @@ const UploadPromos = () => {
       });
       return;
     }
-
+  
     try {
-      const storageRef = ref(firebaseStorage, `Promos/${file.name}`);
+      const extension = file.type === "image/png" ? "png" : "jpeg"; // Ensure consistent extension
+      const storageRef = ref(firebaseStorage, `Promos/${file.name.split(".")[0]}.${extension}`);
+      
       console.log("Uploading to:", storageRef.fullPath);
       
       const snapshot = await uploadBytes(storageRef, file);
@@ -76,17 +81,39 @@ const UploadPromos = () => {
       setUploadUrl(downloadURL);
     } catch (error) {
       console.error("Upload failed:", error);
-      // Log specific error details
-      if (error.code === 'storage/unauthorized') {
+      if (error.code === "storage/unauthorized") {
         console.error("Storage unauthorized. Check storage rules.");
       }
     } 
   };
 
-    // Handle file selection
-    const handleFileChange = (e) => {
-      setFile(e.target.files[0]);
-    };
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    
+    if (!selectedFile) return;
+  
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+    
+    if (!allowedTypes.includes(selectedFile.type)) {
+      alert("Only PNG and JPEG files are allowed.");
+      return;
+    }
+  
+    let convertedFile = selectedFile;
+  
+    // Convert .jpg to .jpeg for compatibility
+    if (selectedFile.type === "image/jpg") {
+      try {
+        const options = { maxWidthOrHeight: 1024, fileType: "image/jpeg" };
+        convertedFile = await imageCompression(selectedFile, options);
+      } catch (error) {
+        console.error("Error converting image:", error);
+        return;
+      }
+    }
+  
+    setFile(convertedFile);
+  };
 
   // Handle user logout
   const handleLogout = async () => {
@@ -111,7 +138,7 @@ const UploadPromos = () => {
       <main>
         <h2>Upload Promos</h2>
         <p>Manage the promos displayed for your business.</p>
-        
+
         {/* File Upload UI */}
         <input type="file" onChange={handleFileChange} />
         <button className={styles.button} onClick={handleUpload}>Upload</button>
