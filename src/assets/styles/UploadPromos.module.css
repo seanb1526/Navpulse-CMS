@@ -106,4 +106,124 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
+  /* Add these styles to your UploadPromos.module.css file */
+
+.uploadSection {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.currentImagesSection {
+  margin-top: 2rem;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.imageCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.imageCard:hover {
+  transform: translateY(-5px);
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.imageWrapper img:hover {
+  transform: scale(1.05);
+}
+
+.imageInfo {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageInfo p {
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+.deleteButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.navigationButtons {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+  clear: both;
+  display: flex;
+  justify-content: center;
+}
+
+/* Make sure our main container has proper spacing */
+main {
+  padding-bottom: 3rem;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Ensure the currentImagesSection doesn't overlap with navigation buttons */
+.currentImagesSection {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Ensure proper mobile responsive layout */
+@media (max-width: 768px) {
+  .imageGrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
   
+  .navigationButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
