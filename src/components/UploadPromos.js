@@ -19,6 +19,9 @@ const UploadPromos = () => {
   const [file, setFile] = useState(null);
   const [uploadUrl, setUploadUrl] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [storeName, setStoreName] = useState("");
+  const [selectedDays, setSelectedDays] = useState([]); // Track selected days
+  const [isDefault, setIsDefault] = useState(true); // Track if default is selected
 
   useEffect(() => {
     const initializeCorrectFirebaseProject = async () => {
@@ -34,15 +37,13 @@ const UploadPromos = () => {
 
         if (userSnap.exists()) {
           const userData = userSnap.data();
+          if (userData.store) setStoreName(userData.store);
 
           if (userData.location === "Salisbury") {
-            // Initialize with a unique name to prevent conflicts
             const salisburyApp = initializeApp(salisburyFirebaseConfig, `salisbury-${user.uid}`);
-            const storage = getStorage(salisburyApp);
-            setFirebaseStorage(storage);
+            setFirebaseStorage(getStorage(salisburyApp));
           } else {
-            const storage = getStorage(masterApp);
-            setFirebaseStorage(storage);
+            setFirebaseStorage(getStorage(masterApp));
           }
           setIsInitialized(true);
         }
@@ -54,102 +55,112 @@ const UploadPromos = () => {
     initializeCorrectFirebaseProject();
   }, []);
 
-
-
   const handleUpload = async () => {
     if (!file || !firebaseStorage || !isInitialized) {
-      console.error("Upload prerequisites not met:", {
-        hasFile: !!file,
-        hasStorage: !!firebaseStorage,
-        isInitialized
-      });
+      console.error("Upload prerequisites not met.");
       return;
     }
-  
+
     try {
-      const extension = file.type === "image/png" ? "png" : "jpeg"; // Ensure consistent extension
-      const storageRef = ref(firebaseStorage, `Promos/${file.name.split(".")[0]}.${extension}`);
-      
-      console.log("Uploading to:", storageRef.fullPath);
-      
-      const snapshot = await uploadBytes(storageRef, file);
-      console.log("Upload snapshot:", snapshot);
-      
-      const downloadURL = await getDownloadURL(storageRef);
-      console.log("Download URL:", downloadURL);
-      
-      setUploadUrl(downloadURL);
+      let uploadedUrls = [];
+
+      if (isDefault) {
+        // Upload as default image
+        const storageRef = ref(firebaseStorage, `Promos/${storeName}.jpeg`);
+        await uploadBytes(storageRef, file);
+        uploadedUrls.push(await getDownloadURL(storageRef));
+      } else {
+        // Upload an image for each selected day
+        for (let day of selectedDays) {
+          const storageRef = ref(firebaseStorage, `Promos/${storeName}_day_${day}.jpeg`);
+          await uploadBytes(storageRef, file);
+          uploadedUrls.push(await getDownloadURL(storageRef));
+        }
+      }
+
+      setUploadUrl(uploadedUrls);
     } catch (error) {
       console.error("Upload failed:", error);
-      if (error.code === "storage/unauthorized") {
-        console.error("Storage unauthorized. Check storage rules.");
-      }
-    } 
+    }
   };
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
-    
     if (!selectedFile) return;
-  
+
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
-    
     if (!allowedTypes.includes(selectedFile.type)) {
       alert("Only PNG and JPEG files are allowed.");
       return;
     }
-  
-    let convertedFile = selectedFile;
-  
-    // Convert .jpg to .jpeg for compatibility
-    if (selectedFile.type === "image/jpg") {
-      try {
-        const options = { maxWidthOrHeight: 1024, fileType: "image/jpeg" };
-        convertedFile = await imageCompression(selectedFile, options);
-      } catch (error) {
-        console.error("Error converting image:", error);
-        return;
-      }
+
+    try {
+      const options = { maxWidthOrHeight: 1024, fileType: "image/jpeg" };
+      setFile(await imageCompression(selectedFile, options));
+    } catch (error) {
+      console.error("Error converting image:", error);
     }
-  
-    setFile(convertedFile);
   };
 
-  // Handle user logout
-  const handleLogout = async () => {
-    try {
-      await signOut(masterAuth);
-      console.log("Logged out successfully!");
-      localStorage.removeItem('user');
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+  const handleDayChange = (day) => {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  };
+
+  const handleDefaultChange = () => {
+    setIsDefault(!isDefault);
+    if (!isDefault) setSelectedDays([]); // Reset days if switching back to default
   };
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <Link to="/" className={styles.logo}>Navpulse</Link>
-        <button className={styles.logoutButton} onClick={handleLogout}>
-          Log out
-        </button>
+        <button className={styles.logoutButton} onClick={async () => {
+          await signOut(masterAuth);
+          navigate("/login");
+        }}>Log out</button>
       </header>
+
       <main>
         <h2>Upload Promos</h2>
         <p>Manage the promos displayed for your business.</p>
+        {storeName && <p><strong>Store Name:</strong> {storeName}</p>}
 
-        {/* File Upload UI */}
         <input type="file" onChange={handleFileChange} />
-        <button className={styles.button} onClick={handleUpload}>Upload</button>
+        
+        <div className={styles.daySelection}>
+          <label>
+            <input type="checkbox" checked={isDefault} onChange={handleDefaultChange} />
+            Default (Every Day)
+          </label>
 
-        {uploadUrl && (
-          <p>
-            File uploaded! <a href={uploadUrl} target="_blank" rel="noopener noreferrer">View Image</a>
+          <div className={`${styles.checkboxGroup} ${isDefault ? styles.disabled : ""}`}>
+            {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+              <label key={day}>
+                <input
+                  type="checkbox"
+                  checked={selectedDays.includes(day)}
+                  onChange={() => handleDayChange(day)}
+                  disabled={isDefault}
+                />
+                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][day - 1]}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <button className={styles.button} onClick={handleUpload} disabled={!file}>
+          Upload
+        </button>
+
+        {uploadUrl && uploadUrl.map((url, index) => (
+          <p key={index}>
+            File uploaded! <a href={url} target="_blank" rel="noopener noreferrer">View Image</a>
           </p>
-        )}
+        ))}
 
-        {/* Button to go back to the Dashboard */}
         <Link to="/dashboard" className={styles.button}>Go Back to Dashboard</Link>
       </main>
     </div>
