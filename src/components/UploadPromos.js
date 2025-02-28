@@ -225,7 +225,8 @@ const UploadPromos = () => {
 
         <div className={styles.uploadSection}>
           <h3>Upload New Image</h3>
-          <input id="file-upload" type="file" onChange={handleFileChange} />
+          <input id="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleFileChange} />
+         
           
           <div className={styles.daySelection}>
             <label>
