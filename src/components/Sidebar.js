@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { masterAuth } from "../firebase/firebaseConfig";
 import styles from "../assets/styles/Sidebar.module.css";
-import navpulseLogo from "../assets/images/navpulse.png"
+import navpulseLogo from "../assets/images/navpulse.png";
 
 const Sidebar = () => {
   const location = useLocation();

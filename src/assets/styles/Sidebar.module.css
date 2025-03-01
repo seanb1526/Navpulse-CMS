@@ -1,40 +1,40 @@
 /* src/assets/styles/Sidebar.module.css */
 .sidebar {
   width: 250px;
-  background-color: white;
-  color: white;
+  background-color: #363430; /* Changed to white background */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 0; /* Remove padding to allow tiles to extend full width */
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   justify-content: flex-start;
-  border-right: 7px solid #732E99; /* Purple outline */
+  border-right: 5px solid #732E98; /* Light border instead of purple outline */
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  text-decoration: none;
-  color: white;
-  margin-bottom: 20px;
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(255, 255, 255); /* Match the sidebar background */
 }
 
 .logo img {
-  width: 100%; /* Adjust width dynamically */
-  max-width: 150px; /* Prevent it from being too large */
-  height: auto; /* Maintain aspect ratio */
-  display: block; /* Remove extra spacing */
-  margin: 0 auto; /* Center inside sidebar */
-  padding: 10px 0; /* Add some vertical spacing */
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  padding: 10px 0;
 }
 
-
 .navList {
+  margin-top: 20px;
   list-style: none;
   padding: 0;
   width: 100%;
@@ -42,38 +42,53 @@
 }
 
 .navList li {
-  margin: 10px 0;
+  margin: 5px 0; /* Slightly more spacing between items */
   width: 100%;
 }
 
 .navLink {
   text-decoration: none;
   color: white;
-  display: block;
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px; /* Reduced padding */
   text-align: center;
-  background-color: #2c3e50;
-  border-radius: 5px;
+  background-color: #524D4A; /* Windows 8 blue */
   transition: background-color 0.3s ease;
+  width: 100%;
+  height: 45px; /* Shorter buttons */
+  font-family: 'Segoe UI', sans-serif; /* Windows 8 font */
+  font-weight: 500; /* Slightly bolder */
+  font-size: 18px; /* Larger text */
+  border: none;
 }
 
-.navLink:hover, .navLink.active {
-  background-color: #732E99;
+.navLink:hover {
+  background-color: #8e59aa; /* Lighter blue on hover */
+}
+
+.navLink.active {
+  background-color: #732E99; /* Keep the purple for active state */
 }
 
 .logoutButton {
   padding: 10px 15px;
-  background-color: #ff5f5f;
+  background-color: #732E98; /* Windows 8 red */
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
+  font-size: 18px; /* Larger text to match navLink */
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 0;
   margin-top: auto;
+  height: 45px; /* Shorter to match navLink */
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 500; /* Slightly bolder */
+  border-radius: 0; /* Removes rounded corners */
 }
 
+
 .logoutButton:hover {
-  background-color: #e14c4c;
+  background-color: #8e59aa; /* Lighter red on hover */
 }
