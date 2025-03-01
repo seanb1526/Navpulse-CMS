@@ -13,8 +13,8 @@ const AccountDetails = () => {
             <h2>Account Details</h2>
           </div>
           <section className={styles.accountInfo}>
-            <h3>Personal Information</h3>
-            <p><strong>Name:</strong> John Doe</p>
+            <h3>Business Information</h3>
+            <p><strong>Name:</strong> Business Name</p>
             <p><strong>Email:</strong> john.doe@example.com</p>
             <p><strong>Phone:</strong> (123) 456-7890</p>
           </section>

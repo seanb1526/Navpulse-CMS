@@ -210,8 +210,6 @@ const UploadPromos = () => {
   return (
     <div className={styles.container}>
       <Sidebar />
-
-
       <main className={styles.mainContent}>
         <div className={styles.contentWrapper}>
           <h2>Upload Promos</h2>

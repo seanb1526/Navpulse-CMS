@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { masterAuth } from "../firebase/firebaseConfig";
 import styles from "../assets/styles/Sidebar.module.css";
+import navpulseLogo from "../assets/images/navpulse.png"
 
 const Sidebar = () => {
   const location = useLocation();
@@ -23,27 +24,29 @@ const Sidebar = () => {
 
   return (
     <nav className={styles.sidebar}>
-      <Link to="/" className={styles.logo}>Navpulse</Link>
+      <Link to="/" className={styles.logo}>
+        <img src={navpulseLogo} alt="Navpulse Logo" />
+      </Link>
       <ul className={styles.navList}>
         <li>
-          <Link 
-            to="/dashboard" 
+          <Link
+            to="/dashboard"
             className={`${styles.navLink} ${isActive("/dashboard")}`}
           >
             Dashboard
           </Link>
         </li>
         <li>
-          <Link 
-            to="/account-details" 
+          <Link
+            to="/account-details"
             className={`${styles.navLink} ${isActive("/account-details")}`}
           >
             Account Details
           </Link>
         </li>
         <li>
-          <Link 
-            to="/upload-promos" 
+          <Link
+            to="/upload-promos"
             className={`${styles.navLink} ${isActive("/upload-promos")}`}
           >
             Upload Promos
