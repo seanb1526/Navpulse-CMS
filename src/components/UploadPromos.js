@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { masterFirebaseConfig, salisburyFirebaseConfig } from "../firebase/firebaseConfig";
 import imageCompression from "browser-image-compression";
 import styles from "../assets/styles/UploadPromos.module.css";
+import Sidebar from "./Sidebar";
 
 // Initialize Master Firebase Project
 const masterApp = initializeApp(masterFirebaseConfig);
@@ -41,7 +42,7 @@ const UploadPromos = () => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           if (userData.store) setStoreName(userData.store);
-          
+
           let storage;
           if (userData.location === "Salisbury") {
             const salisburyApp = initializeApp(salisburyFirebaseConfig, `salisbury-${user.uid}`);
@@ -49,10 +50,10 @@ const UploadPromos = () => {
           } else {
             storage = getStorage(masterApp);
           }
-          
+
           setFirebaseStorage(storage);
           setIsInitialized(true);
-          
+
           // Load existing images once we have storage initialized
           await loadExistingImages(storage, userData.store);
         }
@@ -67,16 +68,16 @@ const UploadPromos = () => {
 
   const loadExistingImages = async (storage, store) => {
     if (!storage || !store) return;
-    
+
     setIsLoading(true);
     try {
       // List all items in the Promos folder
       const listRef = ref(storage, 'Promos');
       const result = await listAll(listRef);
-      
+
       const storePrefix = `${store}.jpeg`;
       const daySpecificPrefix = `${store}_day_`;
-      
+
       const imagePromises = result.items
         .filter(item => {
           const name = item.name;
@@ -87,14 +88,14 @@ const UploadPromos = () => {
           const name = item.name;
           const isDaySpecific = name.startsWith(daySpecificPrefix);
           let day = null;
-          
+
           if (isDaySpecific) {
             const match = name.match(/_day_(\d)/);
             if (match && match[1]) {
               day = parseInt(match[1]);
             }
           }
-          
+
           return {
             name: name,
             url: url,
@@ -103,7 +104,7 @@ const UploadPromos = () => {
             dayName: day ? ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][day - 1] : "Default"
           };
         });
-      
+
       const images = await Promise.all(imagePromises);
       setCurrentImages(images);
     } catch (error) {
@@ -137,10 +138,10 @@ const UploadPromos = () => {
       }
 
       setUploadUrl(uploadedUrls);
-      
+
       // Reload images after upload
       await loadExistingImages(firebaseStorage, storeName);
-      
+
       // Reset file selection
       setFile(null);
       document.getElementById('file-upload').value = '';
@@ -177,22 +178,22 @@ const UploadPromos = () => {
     setIsDefault(!isDefault);
     if (!isDefault) setSelectedDays([]); // Reset days if switching back to default
   };
-  
+
   const handleDelete = async (imageName) => {
     if (!firebaseStorage || deleteInProgress) return;
-    
+
     // Prevent deletion of default image
     if (imageName === `${storeName}.jpeg`) {
       alert("Default image cannot be deleted. You must have at least one image displayed.");
       return;
     }
-    
+
     if (window.confirm("Are you sure you want to delete this image?")) {
       setDeleteInProgress(true);
       try {
         const imageRef = ref(firebaseStorage, `Promos/${imageName}`);
         await deleteObject(imageRef);
-        
+
         // Reload images after deletion
         await loadExistingImages(firebaseStorage, storeName);
       } catch (error) {
@@ -210,88 +211,81 @@ const UploadPromos = () => {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Link to="/" className={styles.logo}>Navpulse</Link>
-        <button className={styles.logoutButton} onClick={async () => {
-          await signOut(masterAuth);
-          navigate("/login");
-        }}>Log out</button>
-      </header>
+      <Sidebar />
 
-      <main>
-        <h2>Upload Promos</h2>
-        <p>Manage the promos displayed for your business.</p>
-        {storeName && <p><strong>Store Name:</strong> {storeName}</p>}
 
-        <div className={styles.uploadSection}>
-          <h3>Upload New Image</h3>
-          <input id="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleFileChange} />
-         
-          
-          <div className={styles.daySelection}>
-            <label>
-              <input type="checkbox" checked={isDefault} onChange={handleDefaultChange} />
-              Default (Every Day)
-            </label>
+      <main className={styles.mainContent}>
+        <div className={styles.contentWrapper}>
+          <h2>Upload Promos</h2>
+          <p>Manage the promos displayed for your business.</p>
+          {storeName && <p><strong>Store Name:</strong> {storeName}</p>}
 
-            <div className={`${styles.checkboxGroup} ${isDefault ? styles.disabled : ""}`}>
-              {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-                <label key={day}>
-                  <input
-                    type="checkbox"
-                    checked={selectedDays.includes(day)}
-                    onChange={() => handleDayChange(day)}
-                    disabled={isDefault}
-                  />
-                  {getDayLabel(day)}
-                </label>
-              ))}
+          <div className={styles.uploadSection}>
+            <h3>Upload New Image</h3>
+            <input id="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleFileChange} />
+
+
+            <div className={styles.daySelection}>
+              <label>
+                <input type="checkbox" checked={isDefault} onChange={handleDefaultChange} />
+                Default (Every Day)
+              </label>
+
+              <div className={`${styles.checkboxGroup} ${isDefault ? styles.disabled : ""}`}>
+                {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                  <label key={day}>
+                    <input
+                      type="checkbox"
+                      checked={selectedDays.includes(day)}
+                      onChange={() => handleDayChange(day)}
+                      disabled={isDefault}
+                    />
+                    {getDayLabel(day)}
+                  </label>
+                ))}
+              </div>
             </div>
+
+            <button
+              className={styles.button}
+              onClick={handleUpload}
+              disabled={!file}
+            >
+              Upload
+            </button>
           </div>
 
-          <button 
-            className={styles.button} 
-            onClick={handleUpload} 
-            disabled={!file}
-          >
-            Upload
-          </button>
-        </div>
+          <div className={styles.currentImagesSection}>
+            <h3>Current Images</h3>
 
-        <div className={styles.currentImagesSection}>
-          <h3>Current Images</h3>
-          
-          {isLoading ? (
-            <p>Loading your images...</p>
-          ) : currentImages.length === 0 ? (
-            <p>No images found. Upload images to display in your business section.</p>
-          ) : (
-            <div className={styles.imageGrid}>
-              {currentImages.map((image, index) => (
-                <div key={index} className={styles.imageCard}>
-                  <div className={styles.imageWrapper}>
-                    <img src={image.url} alt={`Promo for ${image.dayName}`} />
+            {isLoading ? (
+              <p>Loading your images...</p>
+            ) : currentImages.length === 0 ? (
+              <p>No images found. Upload images to display in your business section.</p>
+            ) : (
+              <div className={styles.imageGrid}>
+                {currentImages.map((image, index) => (
+                  <div key={index} className={styles.imageCard}>
+                    <div className={styles.imageWrapper}>
+                      <img src={image.url} alt={`Promo for ${image.dayName}`} />
+                    </div>
+                    <div className={styles.imageInfo}>
+                      <p><strong>{image.isDaySpecific ? `${image.dayName}` : "Default (Every Day)"}</strong></p>
+                      {image.isDaySpecific && (
+                        <button
+                          className={styles.deleteButton}
+                          onClick={() => handleDelete(image.name)}
+                          disabled={deleteInProgress}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div className={styles.imageInfo}>
-                    <p><strong>{image.isDaySpecific ? `${image.dayName}` : "Default (Every Day)"}</strong></p>
-                    {image.isDaySpecific && (
-                      <button 
-                        className={styles.deleteButton}
-                        onClick={() => handleDelete(image.name)}
-                        disabled={deleteInProgress}
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className={styles.navigationButtons}>
-          <Link to="/dashboard" className={styles.button}>Go Back to Dashboard</Link>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>

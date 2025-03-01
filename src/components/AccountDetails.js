@@ -1,36 +1,28 @@
-import { Link, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { masterAuth } from "../firebase/firebaseConfig";
-import styles from "../assets/styles/AccountDetails.module.css"; // Add styles if needed
+// src/pages/AccountDetails.js
+
+import Sidebar from "../components/Sidebar";
+import styles from "../assets/styles/AccountDetails.module.css"; // Use the correct CSS
 
 const AccountDetails = () => {
-  const navigate = useNavigate();
-
-  // Logout function (same as in Dashboard)
-  const handleLogout = async () => {
-    try {
-      await signOut(masterAuth);
-      console.log("Logged out successfully!");
-      localStorage.removeItem('user'); // Remove user from localStorage
-      navigate("/login"); // Redirect to login after logout
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
-
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Link to="/" className={styles.logo}>Navpulse</Link>
-        <button className={styles.logoutButton} onClick={handleLogout}>
-          Log out
-        </button>
-      </header>
-      <main>
-        <h2>Account Details</h2>
-        <p>Manage your Navpulse business account here.</p>
-        {/* Button to go back to the Dashboard */}
-        <Link to="/dashboard" className={styles.button}>Go Back to Dashboard</Link>
+      <Sidebar />
+      <main className={styles.mainContent}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.header}>
+            <h2>Account Details</h2>
+          </div>
+          <section className={styles.accountInfo}>
+            <h3>Personal Information</h3>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Email:</strong> john.doe@example.com</p>
+            <p><strong>Phone:</strong> (123) 456-7890</p>
+          </section>
+          <section className={styles.accountActions}>
+            <h3>Account Actions</h3>
+            <button className={styles.button}>Update Info</button>
+          </section>
+        </div>
       </main>
     </div>
   );
