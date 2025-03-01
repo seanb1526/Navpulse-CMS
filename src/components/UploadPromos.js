@@ -1,5 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
-import { signOut, getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from "firebase/storage";
 import { initializeApp } from "firebase/app";
@@ -15,10 +14,9 @@ const masterAuth = getAuth(masterApp);
 const masterDb = getFirestore(masterApp);
 
 const UploadPromos = () => {
-  const navigate = useNavigate();
   const [firebaseStorage, setFirebaseStorage] = useState(null);
   const [file, setFile] = useState(null);
-  const [uploadUrl, setUploadUrl] = useState(null);
+  const [ setUploadUrl] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [storeName, setStoreName] = useState("");
   const [selectedDays, setSelectedDays] = useState([]); // Track selected days

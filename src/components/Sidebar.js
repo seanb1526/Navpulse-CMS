@@ -1,12 +1,15 @@
-// src/components/Sidebar.js
-
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { masterAuth } from "../firebase/firebaseConfig";
-import styles from "../assets/styles/Sidebar.module.css"; // Updated import
+import styles from "../assets/styles/Sidebar.module.css";
 
 const Sidebar = () => {
-  const location = useLocation(); // Get current path
+  const location = useLocation();
+
+  // Helper function to check if a path is active
+  const isActive = (path) => {
+    return location.pathname === path ? styles.active : "";
+  };
 
   const handleLogout = async () => {
     try {
@@ -25,7 +28,7 @@ const Sidebar = () => {
         <li>
           <Link 
             to="/dashboard" 
-            className={`${styles.navLink} ${location.pathname === "/dashboard" ? styles.active : ""}`}
+            className={`${styles.navLink} ${isActive("/dashboard")}`}
           >
             Dashboard
           </Link>
@@ -33,7 +36,7 @@ const Sidebar = () => {
         <li>
           <Link 
             to="/account-details" 
-            className={`${styles.navLink} ${location.pathname === "/account-details" ? styles.active : ""}`}
+            className={`${styles.navLink} ${isActive("/account-details")}`}
           >
             Account Details
           </Link>
@@ -41,7 +44,7 @@ const Sidebar = () => {
         <li>
           <Link 
             to="/upload-promos" 
-            className={`${styles.navLink} ${location.pathname === "/upload-promos" ? styles.active : ""}`}
+            className={`${styles.navLink} ${isActive("/upload-promos")}`}
           >
             Upload Promos
           </Link>
