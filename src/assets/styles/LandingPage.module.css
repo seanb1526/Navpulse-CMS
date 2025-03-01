@@ -1,61 +1,681 @@
-/* Container styles */
+/* LandingPage.module.css */
+
+/* Global styles */
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background-color: #1d1d1d;
-    color: white;
-  }
-  
-  /* Navpulse Title */
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  /* Sign In Button */
-  .signInButton {
-    background-color: #e94560;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .signInButton:hover {
-    background-color: #d63447;
-  }
-  
-  /* Hero Section */
-  .hero {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .hero h2 {
-    font-size: 36px;
-    margin-bottom: 10px;
-  }
-  
-  .hero p {
-    font-size: 18px;
-    color: #555;
-  }
-  
+  font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Header/Navigation */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 150px; /* Adjust width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.navLinks {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLinks li {
+  margin-right: 2rem;
+}
+
+.navLinks a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navLinks a:hover {
+  color: #4e44ce;
+}
+
+.signInButton {
+  padding: 0.6rem 1.2rem;
+  background-color: transparent;
+  color: #4e44ce;
+  border: 2px solid #4e44ce;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.signInButton:hover {
+  background-color: #4e44ce;
+  color: white;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 5rem 5%;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e9eeff 100%);
+}
+
+.heroContent {
+  flex: 1;
+  max-width: 600px;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: #2a2a5c;
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2.5rem;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  padding: 0.9rem 1.8rem;
+  background-color: #4e44ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.primaryButton:hover {
+  background-color: #3d34b3;
+}
+
+.secondaryButton {
+  padding: 0.9rem 1.8rem;
+  background-color: white;
+  color: #4e44ce;
+  border: 2px solid #4e44ce;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.secondaryButton:hover {
+  background-color: #eeeeff;
+}
+
+.heroImage {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.appScreenshot {
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Features Section */
+.features {
+  padding: 5rem 5%;
+  background-color: white;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #2a2a5c;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  background-color: #f9f9ff;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.featureCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.featureIcon {
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.featureCard h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #2a2a5c;
+}
+
+.featureCard p {
+  color: #555;
+}
+
+/* How It Works Section */
+.howItWorks {
+  padding: 5rem 5%;
+  background-color: #f8f9ff;
+  text-align: center;
+}
+
+.stepsContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+}
+
+.step {
+  flex: 1;
+  min-width: 220px;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepNumber {
+  width: 50px;
+  height: 50px;
+  background-color: #4e44ce;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.stepContent h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #2a2a5c;
+}
+
+.stepContent p {
+  color: #555;
+}
+
+.appDemoContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.appDemoImage {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* For Businesses Section */
+.forBusinesses {
+  padding: 5rem 5%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.businessContent {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  margin-right: 2rem;
+}
+
+.businessIntro {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.businessBenefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.benefit h3 {
+  font-size: 1.2rem;
+  color: #2a2a5c;
+  margin-bottom: 0.5rem;
+}
+
+.benefit p {
+  color: #555;
+}
+
+.businessSignupButton {
+  padding: 0.9rem 1.8rem;
+  background-color: #4e44ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.businessSignupButton:hover {
+  background-color: #3d34b3;
+}
+
+.businessImage {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.storePicture {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+}
+
+/* Testimonials */
+.testimonials {
+  padding: 5rem 5%;
+  background-color: #f8f9ff;
+  text-align: center;
+}
+
+.testimonialSlider {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonialCard {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  max-width: 350px;
+  text-align: left;
+}
+
+.testimonialText {
+  font-style: italic;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.testimonialAuthor {
+  display: flex;
+  align-items: center;
+}
+
+.authorAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.authorName {
+  font-weight: 600;
+  margin: 0;
+}
+
+.authorTitle {
+  color: #777;
+  margin: 0;
+}
+
+/* CTA Section */
+.cta {
+  padding: 5rem 5%;
+  background: linear-gradient(135deg, #4e44ce 0%, #7165eb 100%);
+  color: white;
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ctaContent h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.ctaContent p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.businessButton {
+  padding: 0.9rem 1.8rem;
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.businessButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Contact Section */
+.contact {
+  padding: 5rem 5%;
+  background-color: white;
+}
+
+.contactContainer {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.contactForm {
+  flex: 2;
+  min-width: 300px;
+  margin-right: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.formGroup textarea {
+  resize: vertical;
+}
+
+.submitButton {
+  padding: 0.9rem 1.8rem;
+  background-color: #4e44ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  align-self: flex-start;
+}
+
+.submitButton:hover {
+  background-color: #3d34b3;
+}
+
+.contactInfo {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.infoCard {
+  background-color: #f8f9ff;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.infoCard h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #2a2a5c;
+}
+
+.infoCard p {
+  margin: 0;
+  color: #444;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialIcons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #eeeeff;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.socialIcons a:hover {
+  background-color: #4e44ce;
+}
+
+/* Footer */
+.footer {
+  padding: 4rem 5% 2rem;
+  background-color: #212136;
+  color: white;
+}
+
+.footerTop {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.footerCol {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 2rem;
+  margin-right: 1rem;
+}
+
+.footerTitle {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.footerDescription {
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.footerLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* LandingPage.module.css */
+
+/* General Styles */
+.container {
+  font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Footer Bottom */
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+}
+
+.legalLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.legalLinks a {
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.legalLinks a:hover {
+  color: white;
+}
+
+/* Contact Section */
+.contactContainer {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+/* Ensure form styles are included */
+.formGroup select {
+  appearance: none;
+  background-color: white;
+}
+
+/* Ensure the testimonials section is fully styled */
+.testimonialSlider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 2rem;
+  padding-bottom: 1rem;
+}
+
+.testimonialCard {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  max-width: 350px;
+}
+
+/* Additional styling for hero image placeholder */
+.heroImage img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Add styles for missing elements */
+.storePicture {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Missing button styles */
+.submitButton {
+  background-color: #4e44ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.9rem 1.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: #3d34b3;
+}
+
+/* Ensure placeholders don't look off */
+.featureIcon img,
+.testimonialAuthor img,
+.socialIcons img {
+  max-width: 100%;
+}
