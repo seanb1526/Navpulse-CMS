@@ -1,7 +1,7 @@
 /* src/assets/styles/Sidebar.module.css */
 .sidebar {
   width: 250px;
-  background-color: #9f9f9f;
+  background-color: white;
   color: white;
   display: flex;
   flex-direction: column;
@@ -13,6 +13,7 @@
   top: 0;
   overflow: hidden;
   justify-content: flex-start;
+  border-right: 7px solid #732E99; /* Purple outline */
 }
 
 .logo {
@@ -57,7 +58,7 @@
 }
 
 .navLink:hover, .navLink.active {
-  background-color: #2484ea;
+  background-color: #732E99;
 }
 
 .logoutButton {
