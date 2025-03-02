@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import navpulseLogo from '../assets/images/navpulse.png';
+import appSS from '../assets/images/navpulse_screenshot.jfif'
 import styles from "../assets/styles/LandingPage.module.css";
 
 const LandingPage = () => {
@@ -35,7 +36,7 @@ const LandingPage = () => {
         <div className={styles.heroContent}>
           <h2 className={styles.heroTitle}>Explore Downtown. Earn Rewards.</h2>
           <p className={styles.heroSubtitle}>
-            Discover local businesses, collect digital coins, and unlock exclusive deals
+            Discover local businesses, collect digital coins, and unlock exclusive rewards
             as you walk through downtown.
           </p>
           <div className={styles.ctaButtons}>
@@ -54,9 +55,8 @@ const LandingPage = () => {
           </div>
         </div>
         <div className={styles.heroImage}>
-          {/* Placeholder for hero image - mobile app screenshot or downtown scene */}
           <img
-            src="/api/placeholder/280/550"
+            src={appSS} // Remove the quotes
             alt="Navpulse app screenshot"
             className={styles.appScreenshot}
           />
