@@ -211,77 +211,91 @@ const UploadPromos = () => {
     <div className={styles.container}>
       <Sidebar />
       <main className={styles.mainContent}>
-        <div className={styles.contentWrapper}>
-          <h2>Upload Promos</h2>
-          <p>Manage the promos displayed for your business.</p>
-          {storeName && <p><strong>Store Name:</strong> {storeName}</p>}
+        <div className={styles.header}>
+          <h1>Upload Promos</h1>
+          <p className={styles.subtitle}>Manage promotional images for {storeName}</p>
+        </div>
 
-          <div className={styles.uploadSection}>
-            <h3>Upload New Image</h3>
-            <input id="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleFileChange} />
+        <div className={styles.uploadCard}>
+          <h2>Upload New Promotion</h2>
+          <div className={styles.uploadForm}>
+            <div className={styles.fileInput}>
+              <label htmlFor="file-upload" className={styles.fileLabel}>
+                <i className="fas fa-cloud-upload-alt"></i>
+                Choose Image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={handleFileChange}
+                className={styles.hiddenInput}
+              />
+              {file && <span className={styles.fileName}>{file.name}</span>}
+            </div>
 
-
-            <div className={styles.daySelection}>
-              <label>
-                <input type="checkbox" checked={isDefault} onChange={handleDefaultChange} />
-                Default (Every Day)
+            <div className={styles.scheduleSection}>
+              <h3>Display Schedule</h3>
+              <label className={styles.defaultToggle}>
+                <input
+                  type="checkbox"
+                  checked={isDefault}
+                  onChange={handleDefaultChange}
+                />
+                <span>Display Every Day (Default)</span>
               </label>
 
-              <div className={`${styles.checkboxGroup} ${isDefault ? styles.disabled : ""}`}>
+              <div className={`${styles.daysGrid} ${isDefault ? styles.disabled : ''}`}>
                 {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-                  <label key={day}>
+                  <label key={day} className={styles.dayCheckbox}>
                     <input
                       type="checkbox"
                       checked={selectedDays.includes(day)}
                       onChange={() => handleDayChange(day)}
                       disabled={isDefault}
                     />
-                    {getDayLabel(day)}
+                    <span>{getDayLabel(day)}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             <button
-              className={styles.button}
+              className={styles.uploadButton}
               onClick={handleUpload}
               disabled={!file}
             >
-              Upload
+              <i className="fas fa-upload"></i>
+              Upload Promotion
             </button>
           </div>
+        </div>
 
-          <div className={styles.currentImagesSection}>
-            <h3>Current Images</h3>
-
-            {isLoading ? (
-              <p>Loading your images...</p>
-            ) : currentImages.length === 0 ? (
-              <p>No images found. Upload images to display in your business section.</p>
-            ) : (
-              <div className={styles.imageGrid}>
-                {currentImages.map((image, index) => (
-                  <div key={index} className={styles.imageCard}>
-                    <div className={styles.imageWrapper}>
-                      <img src={image.url} alt={`Promo for ${image.dayName}`} />
-                    </div>
-                    <div className={styles.imageInfo}>
-                      <p><strong>{image.isDaySpecific ? `${image.dayName}` : "Default (Every Day)"}</strong></p>
-                      {image.isDaySpecific && (
-                        <button
-                          className={styles.deleteButton}
-                          onClick={() => handleDelete(image.name)}
-                          disabled={deleteInProgress}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
+        <div className={styles.currentPromos}>
+          <h2>Current Promotions</h2>
+          {isLoading ? (
+            <div className={styles.loading}>Loading promotions...</div>
+          ) : (
+            <div className={styles.promosGrid}>
+              {currentImages.map((image, index) => (
+                <div key={index} className={styles.promoCard}>
+                  <img src={image.url} alt={`Promo ${index + 1}`} />
+                  <div className={styles.promoInfo}>
+                    <span className={styles.promoDay}>
+                      {image.isDaySpecific ? image.dayName : 'Default (Every Day)'}
+                    </span>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDelete(image.name)}
+                      disabled={deleteInProgress}
+                    >
+                      <i className="fas fa-trash-alt"></i>
+                    </button>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

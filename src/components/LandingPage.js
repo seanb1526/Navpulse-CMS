@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import navpulseLogo from '../assets/images/navpulse.png';
 import appSS from '../assets/images/navpulse_screenshot.jfif'
 import styles from "../assets/styles/LandingPage.module.css";
+import facebook from '../assets/icons/facebook.svg';
+import instagram from '../assets/icons/insta.svg';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -288,16 +290,10 @@ const LandingPage = () => {
               <h3>Follow Us</h3>
               <div className={styles.socialIcons}>
                 <a href="https://facebook.com/navpulse" target="_blank" rel="noopener noreferrer">
-                  <img src="/api/placeholder/24/24" alt="Facebook" />
-                </a>
-                <a href="https://twitter.com/navpulse" target="_blank" rel="noopener noreferrer">
-                  <img src="/api/placeholder/24/24" alt="Twitter" />
+                  <img src={facebook} alt="Facebook" />
                 </a>
                 <a href="https://instagram.com/navpulse" target="_blank" rel="noopener noreferrer">
-                  <img src="/api/placeholder/24/24" alt="Instagram" />
-                </a>
-                <a href="https://linkedin.com/company/navpulse" target="_blank" rel="noopener noreferrer">
-                  <img src="/api/placeholder/24/24" alt="LinkedIn" />
+                  <img src={instagram} alt="Instagram" />
                 </a>
               </div>
             </div>
