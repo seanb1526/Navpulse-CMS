@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from '../assets/styles/Sidebar.module.css';
-import logo from '../assets/images/navpulse.png';
+import logo from '../assets/images/Navpulse_Icon.png';
 
 const Sidebar = () => {
   return (
