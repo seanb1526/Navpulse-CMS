@@ -1,9 +1,22 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { masterAuth } from '../firebase/firebaseConfig';
 import styles from '../assets/styles/Sidebar.module.css';
 import logo from '../assets/images/Navpulse_Icon.png';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(masterAuth);
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
@@ -43,7 +56,7 @@ const Sidebar = () => {
       </nav>
       
       <div className={styles.userSection}>
-        <button className={styles.logoutButton}>
+        <button className={styles.logoutButton} onClick={handleLogout}>
           <i className="fas fa-sign-out-alt"></i>
           Logout
         </button>

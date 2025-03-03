@@ -1,61 +1,160 @@
 // src/pages/AccountDetails.js
 
 import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { masterAuth, masterDb } from '../firebase/firebaseConfig';
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import Sidebar from './Sidebar';
 import styles from '../assets/styles/AccountDetails.module.css';
 
 const AccountDetails = () => {
   const [businessInfo, setBusinessInfo] = useState({
-    name: '',
     email: '',
     phone: '',
     address: '',
     location: '',
-    store: ''
+    store: '',
+    userId: ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
 
   useEffect(() => {
     loadBusinessInfo();
   }, []);
 
   const loadBusinessInfo = async () => {
-    const auth = getAuth();
-    const db = getFirestore();
-    
-    if (auth.currentUser) {
-      const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    try {
+      const user = masterAuth.currentUser;
+      if (!user) {
+        setError('No user logged in');
+        return;
+      }
+
+      const userDoc = await getDoc(doc(masterDb, 'users', user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
-        setBusinessInfo(data);
-        setEditForm(data);
+        setBusinessInfo({
+          ...data,
+          userId: user.uid
+        });
+        setEditForm({
+          phone: data.phone || '',
+          address: data.address || ''
+        });
+      } else {
+        setError('User data not found');
       }
+    } catch (error) {
+      console.error('Error loading business info:', error);
+      setError('Failed to load business information');
     }
   };
 
   const handleEdit = () => {
     setIsEditing(true);
+    setError('');
+    setSuccess('');
   };
 
   const handleSave = async () => {
-    const auth = getAuth();
-    const db = getFirestore();
-    
     try {
-      await updateDoc(doc(db, 'users', auth.currentUser.uid), editForm);
-      setBusinessInfo(editForm);
+      const user = masterAuth.currentUser;
+      if (!user) {
+        setError('No user logged in');
+        return;
+      }
+
+      const updateData = {
+        phone: editForm.phone,
+        address: editForm.address
+      };
+
+      await updateDoc(doc(masterDb, 'users', user.uid), updateData);
+
+      setBusinessInfo(prev => ({
+        ...prev,
+        phone: editForm.phone,
+        address: editForm.address
+      }));
       setIsEditing(false);
+      setSuccess('Profile updated successfully');
+      setError('');
     } catch (error) {
       console.error('Error updating profile:', error);
+      setError('Failed to update profile');
+      setSuccess('');
     }
   };
 
   const handleCancel = () => {
-    setEditForm(businessInfo);
+    setEditForm({
+      phone: businessInfo.phone || '',
+      address: businessInfo.address || ''
+    });
     setIsEditing(false);
+    setError('');
+    setSuccess('');
+  };
+
+  const handlePasswordChange = async () => {
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    // Validate passwords
+    if (newPassword !== confirmPassword) {
+      setPasswordError('New passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError('Password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      const user = masterAuth.currentUser;
+      if (!user) {
+        setPasswordError('No user logged in');
+        return;
+      }
+
+      // Reauthenticate user before password change
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword
+      );
+
+      await reauthenticateWithCredential(user, credential);
+      
+      // Update password
+      await updatePassword(user, newPassword);
+
+      setPasswordSuccess('Password updated successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => {
+        setShowPasswordModal(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error updating password:', error);
+      if (error.code === 'auth/wrong-password') {
+        setPasswordError('Current password is incorrect');
+      } else if (error.code === 'auth/requires-recent-login') {
+        setPasswordError('Please log in again to change your password');
+      } else {
+        setPasswordError('Failed to update password');
+      }
+    }
   };
 
   return (
@@ -72,40 +171,35 @@ const AccountDetails = () => {
           )}
         </div>
 
+        {error && <div className={styles.error}>{error}</div>}
+        {success && <div className={styles.success}>{success}</div>}
+
         <div className={styles.contentGrid}>
           <div className={styles.infoCard}>
             <h2>Business Information</h2>
             {isEditing ? (
               <div className={styles.editForm}>
                 <div className={styles.formGroup}>
-                  <label>Business Name</label>
-                  <input
-                    type="text"
-                    value={editForm.name || ''}
-                    onChange={(e) => setEditForm({...editForm, name: e.target.value})}
-                  />
-                </div>
-                <div className={styles.formGroup}>
                   <label>Store Name</label>
                   <input
                     type="text"
-                    value={editForm.store || ''}
-                    onChange={(e) => setEditForm({...editForm, store: e.target.value})}
+                    value={businessInfo.store}
+                    disabled
                   />
                 </div>
                 <div className={styles.formGroup}>
                   <label>Email</label>
                   <input
                     type="email"
-                    value={editForm.email || ''}
-                    onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                    value={businessInfo.email}
+                    disabled
                   />
                 </div>
                 <div className={styles.formGroup}>
                   <label>Phone</label>
                   <input
                     type="tel"
-                    value={editForm.phone || ''}
+                    value={editForm.phone}
                     onChange={(e) => setEditForm({...editForm, phone: e.target.value})}
                   />
                 </div>
@@ -113,7 +207,7 @@ const AccountDetails = () => {
                   <label>Address</label>
                   <input
                     type="text"
-                    value={editForm.address || ''}
+                    value={editForm.address}
                     onChange={(e) => setEditForm({...editForm, address: e.target.value})}
                   />
                 </div>
@@ -121,8 +215,8 @@ const AccountDetails = () => {
                   <label>Location</label>
                   <input
                     type="text"
-                    value={editForm.location || ''}
-                    onChange={(e) => setEditForm({...editForm, location: e.target.value})}
+                    value={businessInfo.location}
+                    disabled
                   />
                 </div>
                 <div className={styles.buttonGroup}>
@@ -136,10 +230,6 @@ const AccountDetails = () => {
               </div>
             ) : (
               <div className={styles.infoDisplay}>
-                <div className={styles.infoRow}>
-                  <span>Business Name</span>
-                  <span>{businessInfo.name}</span>
-                </div>
                 <div className={styles.infoRow}>
                   <span>Store Name</span>
                   <span>{businessInfo.store}</span>
@@ -166,16 +256,74 @@ const AccountDetails = () => {
 
           <div className={styles.infoCard}>
             <h2>Account Security</h2>
-            <button className={styles.securityButton}>
+            <button 
+              className={styles.securityButton}
+              onClick={() => setShowPasswordModal(true)}
+            >
               <i className="fas fa-key"></i>
               Change Password
             </button>
-            <button className={styles.securityButton}>
-              <i className="fas fa-shield-alt"></i>
-              Two-Factor Authentication
-            </button>
           </div>
         </div>
+
+        {/* Password Change Modal */}
+        {showPasswordModal && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modal}>
+              <h2>Change Password</h2>
+              {passwordError && <div className={styles.error}>{passwordError}</div>}
+              {passwordSuccess && <div className={styles.success}>{passwordSuccess}</div>}
+              <div className={styles.formGroup}>
+                <label>Current Password</label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current password"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>New Password</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Confirm New Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                />
+              </div>
+              <div className={styles.buttonGroup}>
+                <button 
+                  className={styles.saveButton}
+                  onClick={handlePasswordChange}
+                >
+                  Update Password
+                </button>
+                <button 
+                  className={styles.cancelButton}
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setCurrentPassword('');
+                    setNewPassword('');
+                    setConfirmPassword('');
+                    setPasswordError('');
+                    setPasswordSuccess('');
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

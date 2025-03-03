@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { masterAuth, useAuth } from "../firebase/firebaseConfig"; // Import masterAuth and useAuth
 import styles from "../assets/styles/LogIn.module.css"; // Import CSS module
+import navpulseLogo from '../assets/images/navpulse.png';
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -32,28 +33,46 @@ const LogIn = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Log In to Navpulse</h2>
-      {error && <p className={styles.error}>{error}</p>}
-      <form onSubmit={handleLogin} className={styles.form}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit" className={styles.button}>Log in</button>
-      </form>
-      <p className={styles.link} onClick={() => navigate("/signup")}>
-        Don't have an account? Contact Support
-      </p>
+      {/* Header/Navigation */}
+      <header className={styles.header}>
+        <div className={styles.logoContainer}>
+          <img src={navpulseLogo} alt="Navpulse Logo" className={styles.logo} onClick={() => navigate("/")} />
+        </div>
+
+        <nav className={styles.nav}>
+          <button
+            className={styles.homeButton}
+            onClick={() => navigate("/")}
+          >
+            Return to Home
+          </button>
+        </nav>
+      </header>
+
+      <div className={styles.content}>
+        <h2>Log In to Navpulse</h2>
+        {error && <p className={styles.error}>{error}</p>}
+        <form onSubmit={handleLogin} className={styles.form}>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+          <button type="submit" className={styles.button}>Log in</button>
+        </form>
+        <p className={styles.link} onClick={() => navigate("/signup")}>
+          Don't have an account? Contact Support
+        </p>
+      </div>
     </div>
   );
 };
