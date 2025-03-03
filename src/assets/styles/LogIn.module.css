@@ -1,74 +1,201 @@
 /* LogIn.module.css */
+.pageContainer {
+  min-height: 100vh;
+  height: 100vh; /* Force exact viewport height */
+  background-color: #f8f9ff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%; /* Match landing page header padding */
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Match landing page shadow */
+}
+
+.logoLink {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 150px; /* Match landing page logo size */
+  height: auto;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s;
+  padding: 0.6rem 1.2rem; /* Match landing page button padding */
+  border: 2px solid #4e44ce;
+  border-radius: 4px;
+  color: #4e44ce;
+}
+
+.backLink:hover {
+  background-color: #4e44ce;
+  color: white;
+}
+
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f7f7f7;
-    padding: 20px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto; /* Allow scrolling only if content is too tall */
+}
+
+.loginCard {
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 440px;
+  margin: auto; /* Center the card */
+}
+
+.title {
+  color: #2a2a5c;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 16px;
+  margin: 0 0 32px 0;
+}
+
+.errorMessage {
+  background-color: #fff2f2;
+  color: #ff4444;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  color: #2a2a5c;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.formGroup input {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.formGroup input:focus {
+  border-color: #4e44ce;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(78, 68, 206, 0.1);
+}
+
+.submitButton {
+  background-color: #4e44ce;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #3d34b3;
+}
+
+.submitButton:disabled {
+  background-color: #a8a8a8;
+  cursor: not-allowed;
+}
+
+.loadingSpinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  color: #666;
+}
+
+.link {
+  color: #4e44ce;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #3d34b3;
+  text-decoration: underline;
+}
+
+@media (max-height: 700px) {
+  .container {
+    align-items: flex-start; /* Adjust alignment for very small heights */
+    padding-top: 40px;
   }
-  
-  h2 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 1rem 5%; /* Slightly reduce padding on mobile */
   }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 400px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .logo {
+    width: 120px; /* Slightly smaller logo on mobile */
   }
-  
-  input {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.3s;
+
+  .loginCard {
+    padding: 24px;
   }
-  
-  input:focus {
-    border-color: #007bff;
+
+  .title {
+    font-size: 24px;
   }
-  
-  button {
-    padding: 12px;
-    font-size: 1rem;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error {
-    color: red;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-  
-  .link {
-    color: #007bff;
-    font-size: 0.9rem;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .link:hover {
-    text-decoration: underline;
-  }
+}
   
