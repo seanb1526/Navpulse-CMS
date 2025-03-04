@@ -16,7 +16,7 @@ const masterDb = getFirestore(masterApp);
 const UploadPromos = () => {
   const [firebaseStorage, setFirebaseStorage] = useState(null);
   const [file, setFile] = useState(null);
-  const [ setUploadUrl] = useState(null);
+  const [uploadUrl, setUploadUrl] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [storeName, setStoreName] = useState("");
   const [selectedDays, setSelectedDays] = useState([]); // Track selected days
@@ -24,6 +24,7 @@ const UploadPromos = () => {
   const [currentImages, setCurrentImages] = useState([]); // Store current images
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [deleteInProgress, setDeleteInProgress] = useState(false); // Track deletion in progress
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const initializeCorrectFirebaseProject = async () => {
@@ -135,16 +136,27 @@ const UploadPromos = () => {
         }
       }
 
-      setUploadUrl(uploadedUrls);
+      // Reset file selection and form
+      setFile(null);
+      document.getElementById('file-upload').value = '';
+      
+      // Reset days selection if it was a day-specific upload
+      if (!isDefault) {
+        setSelectedDays([]);
+        setIsDefault(true);
+      }
 
       // Reload images after upload
       await loadExistingImages(firebaseStorage, storeName);
 
-      // Reset file selection
-      setFile(null);
-      document.getElementById('file-upload').value = '';
+      // Clear any previous errors
+      setUploadUrl(uploadedUrls);
     } catch (error) {
       console.error("Upload failed:", error);
+      // Only show error if it's not a successful upload
+      if (!error.message.includes('already exists')) {
+        alert("Upload failed. Please try again.");
+      }
     }
   };
 
@@ -284,13 +296,16 @@ const UploadPromos = () => {
                     <span className={styles.promoDay}>
                       {image.isDaySpecific ? image.dayName : 'Default (Every Day)'}
                     </span>
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => handleDelete(image.name)}
-                      disabled={deleteInProgress}
-                    >
-                      <i className="fas fa-trash-alt"></i>
-                    </button>
+                    {image.isDaySpecific && (
+                      <button
+                        className={styles.deleteButton}
+                        onClick={() => handleDelete(image.name)}
+                        disabled={deleteInProgress}
+                        title="Delete this promotion"
+                      >
+                        <i className="fas fa-trash-alt"></i>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
