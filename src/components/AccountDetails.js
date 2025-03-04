@@ -1,14 +1,13 @@
 // src/pages/AccountDetails.js
 
 import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
+import { getAuth, updatePassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import Sidebar from './Sidebar';
 import styles from '../assets/styles/AccountDetails.module.css';
 
 const AccountDetails = () => {
   const [businessInfo, setBusinessInfo] = useState({
-    name: '',
     email: '',
     phone: '',
     address: '',
@@ -17,6 +16,11 @@ const AccountDetails = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
 
   useEffect(() => {
     loadBusinessInfo();
@@ -58,6 +62,97 @@ const AccountDetails = () => {
     setIsEditing(false);
   };
 
+  const handlePasswordChange = async () => {
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Passwords don't match");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    setIsPasswordUpdating(true);
+    setPasswordError('');
+
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      await updatePassword(user, newPassword);
+      setShowPasswordModal(false);
+      setNewPassword('');
+      setConfirmPassword('');
+      alert('Password updated successfully!');
+    } catch (error) {
+      setPasswordError('Failed to update password. Please try again.');
+      console.error('Error updating password:', error);
+    } finally {
+      setIsPasswordUpdating(false);
+    }
+  };
+
+  const PasswordChangeModal = () => (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modal}>
+        <h2>Change Password</h2>
+        {passwordError && (
+          <div className={styles.errorMessage}>{passwordError}</div>
+        )}
+        <div className={styles.formGroup}>
+          <label>New Password</label>
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="Enter new password"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm new password"
+          />
+        </div>
+        <div className={styles.buttonGroup}>
+          <button 
+            className={styles.saveButton} 
+            onClick={handlePasswordChange}
+            disabled={isPasswordUpdating}
+          >
+            {isPasswordUpdating ? 'Updating...' : 'Update Password'}
+          </button>
+          <button 
+            className={styles.cancelButton} 
+            onClick={() => {
+              setShowPasswordModal(false);
+              setNewPassword('');
+              setConfirmPassword('');
+              setPasswordError('');
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const securitySection = (
+    <div className={styles.infoCard}>
+      <h2>Account Security</h2>
+      <button 
+        className={styles.securityButton}
+        onClick={() => setShowPasswordModal(true)}
+      >
+        <i className="fas fa-key"></i>
+        Change Password
+      </button>
+    </div>
+  );
+
   return (
     <div className={styles.container}>
       <Sidebar />
@@ -77,14 +172,6 @@ const AccountDetails = () => {
             <h2>Business Information</h2>
             {isEditing ? (
               <div className={styles.editForm}>
-                <div className={styles.formGroup}>
-                  <label>Business Name</label>
-                  <input
-                    type="text"
-                    value={editForm.name || ''}
-                    onChange={(e) => setEditForm({...editForm, name: e.target.value})}
-                  />
-                </div>
                 <div className={styles.formGroup}>
                   <label>Store Name</label>
                   <input
@@ -138,10 +225,6 @@ const AccountDetails = () => {
               <div className={styles.infoDisplay}>
                 <div className={styles.infoRow}>
                   <span>Business Name</span>
-                  <span>{businessInfo.name}</span>
-                </div>
-                <div className={styles.infoRow}>
-                  <span>Store Name</span>
                   <span>{businessInfo.store}</span>
                 </div>
                 <div className={styles.infoRow}>
@@ -164,18 +247,9 @@ const AccountDetails = () => {
             )}
           </div>
 
-          <div className={styles.infoCard}>
-            <h2>Account Security</h2>
-            <button className={styles.securityButton}>
-              <i className="fas fa-key"></i>
-              Change Password
-            </button>
-            <button className={styles.securityButton}>
-              <i className="fas fa-shield-alt"></i>
-              Two-Factor Authentication
-            </button>
-          </div>
+          {securitySection}
         </div>
+        {showPasswordModal && <PasswordChangeModal />}
       </main>
     </div>
   );
