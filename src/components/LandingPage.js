@@ -265,7 +265,7 @@ const LandingPage = () => {
           <div className={styles.ctaButtons}>
             <button
               className={styles.primaryButton}
-              onClick={() => window.open("https://apps.apple.com/app/navpulse", "_blank")}
+              onClick={() => window.open("https://apps.apple.com/us/app/downtown-salisbury-navpulse/id6739784129?platform=iphone", "_blank")}
             >
               Download Now
             </button>
