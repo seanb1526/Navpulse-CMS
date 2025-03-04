@@ -16,7 +16,6 @@ const masterDb = getFirestore(masterApp);
 const UploadPromos = () => {
   const [firebaseStorage, setFirebaseStorage] = useState(null);
   const [file, setFile] = useState(null);
-  const [uploadUrl, setUploadUrl] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [storeName, setStoreName] = useState("");
   const [selectedDays, setSelectedDays] = useState([]); // Track selected days
@@ -24,7 +23,6 @@ const UploadPromos = () => {
   const [currentImages, setCurrentImages] = useState([]); // Store current images
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [deleteInProgress, setDeleteInProgress] = useState(false); // Track deletion in progress
-  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const initializeCorrectFirebaseProject = async () => {
@@ -150,7 +148,7 @@ const UploadPromos = () => {
       await loadExistingImages(firebaseStorage, storeName);
 
       // Clear any previous errors
-      setUploadUrl(uploadedUrls);
+      // setUploadUrl(uploadedUrls);
     } catch (error) {
       console.error("Upload failed:", error);
       // Only show error if it's not a successful upload
@@ -289,26 +287,28 @@ const UploadPromos = () => {
             <div className={styles.loading}>Loading promotions...</div>
           ) : (
             <div className={styles.promosGrid}>
-              {currentImages.map((image, index) => (
-                <div key={index} className={styles.promoCard}>
-                  <img src={image.url} alt={`Promo ${index + 1}`} />
-                  <div className={styles.promoInfo}>
-                    <span className={styles.promoDay}>
-                      {image.isDaySpecific ? image.dayName : 'Default (Every Day)'}
-                    </span>
-                    {image.isDaySpecific && (
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => handleDelete(image.name)}
-                        disabled={deleteInProgress}
-                        title="Delete this promotion"
-                      >
-                        <i className="fas fa-trash-alt"></i>
-                      </button>
-                    )}
+              {currentImages.map((image, index) => {
+                console.log('Rendering image:', image); // Keep this debug log
+                return (
+                  <div key={index} className={styles.imageCard}>
+                    <div className={styles.imageWrapper}>
+                      <img src={image.url} alt={`Promo for ${image.dayName}`} />
+                    </div>
+                    <div className={styles.imageInfo}>
+                      <p><strong>{image.isDaySpecific ? `${image.dayName}` : "Default (Every Day)"}</strong></p>
+                      {image.isDaySpecific && (
+                        <button 
+                          className={styles.deleteButton}
+                          onClick={() => handleDelete(image.name)}
+                          disabled={deleteInProgress}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
