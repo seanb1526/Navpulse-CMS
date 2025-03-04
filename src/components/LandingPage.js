@@ -5,6 +5,14 @@ import appSS from '../assets/images/navpulse_screenshot.jfif'
 import styles from "../assets/styles/LandingPage.module.css";
 import facebook from '../assets/icons/facebook.svg';
 import instagram from '../assets/icons/insta.svg';
+import gamificationIcon from '../assets/icons/gamification.png';
+import dealsIcon from '../assets/icons/deals.png';
+import gemIcon from '../assets/icons/gem.png';
+import rewardsIcon from '../assets/icons/rewards.png';
+import businessPicture from '../assets/images/businessesPic.webp';
+import communityIcon from '../assets/icons/community.png';
+import customerInsightIcon from '../assets/icons/customerInsights.png';
+import footTrafficIcon from '../assets/icons/footTraffic.png';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -71,28 +79,28 @@ const LandingPage = () => {
         <div className={styles.featureGrid}>
           <div className={styles.featureCard}>
             <div className={styles.featureIcon}>
-              <img src="/api/placeholder/64/64" alt="Gamification icon" />
+              <img src={gamificationIcon} alt="Gamification icon" />
             </div>
             <h3>Gamified Experience</h3>
             <p>Turn downtown exploration into a fun, interactive game as you collect coins at each store you visit.</p>
           </div>
           <div className={styles.featureCard}>
             <div className={styles.featureIcon}>
-              <img src="/api/placeholder/64/64" alt="Deals icon" />
+              <img src={dealsIcon} alt="Deals icon" />
             </div>
             <h3>Exclusive Deals</h3>
             <p>Unlock special promotions, discounts, and offers available only to Navpulse users.</p>
           </div>
           <div className={styles.featureCard}>
             <div className={styles.featureIcon}>
-              <img src="/api/placeholder/64/64" alt="Discovery icon" />
+              <img src={gemIcon} alt="Discovery icon" />
             </div>
             <h3>Discover Local Gems</h3>
             <p>Find new businesses and hidden treasures in your downtown area you might have overlooked.</p>
           </div>
           <div className={styles.featureCard}>
             <div className={styles.featureIcon}>
-              <img src="/api/placeholder/64/64" alt="Rewards icon" />
+              <img src={rewardsIcon} alt="Rewards icon" />
             </div>
             <h3>Earn Real Rewards</h3>
             <p>Redeem collected coins for tangible benefits, coupons, and entry into exclusive raffles.</p>
@@ -134,11 +142,14 @@ const LandingPage = () => {
           </div>
         </div>
         <div className={styles.appDemoContainer}>
-          <img
-            src="/api/placeholder/800/400"
-            alt="App demonstration"
-            className={styles.appDemoImage}
-          />
+          <div className={styles.videoWrapper}>
+            <iframe 
+              src="https://drive.google.com/file/d/1-hhEnEAf-rrN6S1Zkb6KVaq3I7MolYjZ/preview" 
+              title="Navpulse App Demo"
+              className={styles.demoVideo}
+              allow="autoplay"
+            />
+          </div>
         </div>
       </section>
 
@@ -151,18 +162,38 @@ const LandingPage = () => {
           </p>
           <div className={styles.businessBenefits}>
             <div className={styles.benefit}>
+              <img 
+                src={footTrafficIcon} 
+                alt="Foot Traffic" 
+                className={styles.benefitIcon}
+              />
               <h3>Increase Foot Traffic</h3>
               <p>Attract more visitors to your physical location through gamified incentives.</p>
             </div>
             <div className={styles.benefit}>
+              <img 
+                src={customerInsightIcon} 
+                alt="Customer Insights" 
+                className={styles.benefitIcon}
+              />
               <h3>Customer Insights</h3>
               <p>Gain valuable data on customer behavior and foot traffic patterns.</p>
             </div>
             <div className={styles.benefit}>
+              <img 
+                src={dealsIcon} 
+                alt="Targeted Promotions" 
+                className={styles.benefitIcon}
+              />
               <h3>Targeted Promotions</h3>
               <p>Offer special deals to motivated customers already in your downtown area.</p>
             </div>
             <div className={styles.benefit}>
+              <img 
+                src={communityIcon} 
+                alt="Community Engagement" 
+                className={styles.benefitIcon}
+              />
               <h3>Community Engagement</h3>
               <p>Be part of a collaborative effort to revitalize downtown commerce.</p>
             </div>
@@ -176,7 +207,7 @@ const LandingPage = () => {
         </div>
         <div className={styles.businessImage}>
           <img
-            src="/api/placeholder/450/400"
+            src={businessPicture}
             alt="Business owners with Navpulse"
             className={styles.storePicture}
           />
@@ -348,6 +379,9 @@ const LandingPage = () => {
             <a href="/privacy-policy">Privacy Policy</a>
             <a href="/terms-of-service">Terms of Service</a>
           </div>
+        </div>
+        <div className={styles.attribution}>
+          <p>Icons by <a href="https://icons8.com" target="_blank" rel="noopener noreferrer">Icons8</a></p>
         </div>
       </footer>
     </div>
