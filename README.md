@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# Navpulse CMS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Navpulse CMS is a content management system designed for business owners to manage their storefront promotions, view analytics, and update their profile information for the Downtown Navpulse app. It also serves as the official landing page for the Navpulse app, providing more information about its features and benefits.
 
-## Available Scripts
+## About Navpulse
 
-In the project directory, you can run:
+Navpulse is an innovative mobile app designed to increase foot traffic and boost sales potential for downtown businesses. Participating storefronts are equipped with BLE beacons, allowing app users to "pulse" a storefront and collect coins. These coins can be redeemed in the rewards shop for deals, discounts, raffle entries, and more.
 
-### `npm start`
+### Key Benefits:
+- Encourages foot traffic by rewarding users for visiting storefronts.
+- Provides businesses with a direct way to promote deals and specials.
+- Eliminates the need for users to follow multiple social media pages to stay updated on promotions.
+- Creates a fun and engaging way for users to explore their city.
+- Provide analytics of storefront visits and pulses to businesses, as well as coupon redemptions, and     other foot traffic analytics
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Live Demo
+Check out the live application here: **[Navpulse CMS](https://navpulse-cms.vercel.app/)** 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
+To explore the Sign-In content:
+Username: demo@test.com
+Password: tester1
+**We just ask that you don't upload any content on the UploadPromos Page**
 
-### `npm test`
+### Prerequisites
+Ensure you have the following installed before running the project:
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/navpulse-cms.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd navpulse-cms
+   ```
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
 
-### `npm run build`
+### Running the Application
+To start the development server, run:
+```sh
+npm start
+```
+Then, open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Building for Production
+To create a production build:
+```sh
+npm run build
+```
+This will generate optimized static files in the `build/` directory, ready for deployment.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributing
+If you'd like to contribute to Navpulse CMS, please fork the repository and submit a pull request with your changes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## License
+This project is licensed under the MIT License.
 
-### `npm run eject`
+## Contact
+For inquiries or support, contact **[Your Name]** at **[Your Email]**.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Feel free to update the domain and contact details accordingly!
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

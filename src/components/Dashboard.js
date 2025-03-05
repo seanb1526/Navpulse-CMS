@@ -11,12 +11,6 @@ const Dashboard = () => {
       <main className={styles.mainContent}>
         <div className={styles.header}>
           <h1>Dashboard</h1>
-          <div className={styles.headerActions}>
-            <button className={styles.primaryButton}>
-              <i className="fas fa-plus"></i>
-              New Promotion
-            </button>
-          </div>
         </div>
         
         <div className={styles.statsGrid}>
